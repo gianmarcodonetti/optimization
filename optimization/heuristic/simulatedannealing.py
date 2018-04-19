@@ -1,4 +1,5 @@
 import numpy as np
+import sys
 
 
 def cooling(t, alpha=0.99):
@@ -15,6 +16,23 @@ def probability(delta, T):
 
 def simulated_annealing(h, obj_function, T_initial, T_final, ctr_max, alpha=0.99, k=10, E=10, minimization=True,
                         verbose=False):
+    """
+
+    Args:
+        h (float):
+        obj_function (callable):
+        T_initial (float):
+        T_final (float):
+        ctr_max (int):
+        alpha (float):
+        k (float):
+        E (float):
+        minimization (bool):
+        verbose (bool):
+
+    Returns:
+        float, list:
+    """
     if minimization:
         improvement = lambda x: x <= 0
     else:
@@ -22,8 +40,8 @@ def simulated_annealing(h, obj_function, T_initial, T_final, ctr_max, alpha=0.99
     T = T_initial
     cache = [h]
     while T > T_final:
-        if verbose and np.random.random() <= 0.2:
-            print("Temperature: {}".format(T))
+        if verbose and np.random.random() < 0.1:
+            sys.stdout.write("Temperature: {}\n".format(T))
         for ctr in range(1, ctr_max):
             h_prime = neighbour(h, k, E)
             cache.append(h_prime)
