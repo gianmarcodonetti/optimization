@@ -37,20 +37,28 @@ def simulated_annealing(h, obj_function, T_initial, T_final, ctr_max, alpha=0.99
         improvement = lambda x: x <= 0
     else:
         improvement = lambda x: x >= 0
+    h_current = h
     T = T_initial
     cache = [h]
     while T > T_final:
-        if verbose and np.random.random() < 0.1:
+        if verbose and np.random.random() < 0.01:
             sys.stdout.write("Temperature: {}\n".format(T))
         for ctr in range(1, ctr_max):
-            h_prime = neighbour(h, k, E)
+            h_prime = neighbour(h_current, k, E)
             cache.append(h_prime)
-            delta = obj_function(h_prime) - obj_function(h)
-            if improvement(delta):
-                h = h_prime
-            else:
-                prob = probability(delta, T)
-                if np.random.random() <= prob:
-                    h = h_prime
+            h_current = evaluate_move(h_current, h_prime, T, obj_function, improvement)
         T = cooling(T, alpha)
-    return h, cache
+    return h_current, cache
+
+
+def evaluate_move(h, h_prime, T, obj_function, improvement):
+    delta = obj_function(h_prime) - obj_function(h)
+    if improvement(delta):
+        h_new = h_prime
+    else:
+        prob = probability(delta, T)
+        if np.random.random() <= prob:
+            h_new = h_prime
+        else:
+            h_new = h
+    return h_new
