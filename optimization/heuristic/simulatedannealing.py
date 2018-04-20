@@ -14,25 +14,29 @@ def probability(delta, T):
     return np.e ** (-delta / T)
 
 
-def simulated_annealing(h, obj_function, T_initial, T_final, ctr_max, alpha=0.99, k=10, E=10, minimization=True,
-                        verbose=False):
+def simulated_annealing(h, obj_function, T_initial=80, T_final=1e-100, ctr_max=100, alpha=0.99, k=10, E=10,
+                        minimization=True, verbose=False):
     """
 
     Args:
-        h (float):
-        obj_function (callable):
-        T_initial (float):
-        T_final (float):
-        ctr_max (int):
-        alpha (float):
+        h (float): initial solution
+        obj_function (callable): objective function, to minimize or maximize
+        T_initial (float): initial temperature
+        T_final (float): final temperature
+        ctr_max (int): number of iterations per cooling process
+        alpha (float): temperature decay, should be between 0 and 1
         k (float):
         E (float):
-        minimization (bool):
-        verbose (bool):
+        minimization (bool): whether to minimize or maximize the objective function
+        verbose (bool): whether to be verbose or not
 
     Returns:
         float, list:
     """
+
+    assert 0 < alpha < 1, "Input param 'alpha' should be in (0, 1), {} is not ok".format(alpha)
+    assert 0 < T_final < T_initial, "Input params of temperature should respect:  0 < T_final < T_initial"
+
     if minimization:
         improvement = lambda x: x <= 0
     else:

@@ -42,6 +42,7 @@ def basic():
     plt.xlabel('X')
     plt.ylabel('Y')
     plt.title("Optimal value found")
+    plt.legend()
     plt.show()
 
     return
@@ -84,11 +85,14 @@ def advance():
     plt.xlabel('X')
     plt.ylabel('Y')
     plt.title("Optimal value found")
+    plt.legend()
     plt.show()
 
     return
 
 
 if __name__ == '__main__':
+    input("Please, press Enter to start...")
     basic()
     advance()
+    input("Please, press Enter to end...")
