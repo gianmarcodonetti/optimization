@@ -37,6 +37,13 @@ def simulated_annealing(h, obj_function, T_initial=80, T_final=1e-100, ctr_max=1
     assert 0 < alpha < 1, "Input param 'alpha' should be in (0, 1), {} is not ok".format(alpha)
     assert 0 < T_final < T_initial, "Input params of temperature should respect:  0 < T_final < T_initial"
 
+    def iter(h_current, k, E, T, obj_function, improvement):
+        # 1. generating new solution
+        h_prime = neighbour(h_current, k, E)
+        # 2. Making decision
+        h_current = evaluate_move(h_current, h_prime, T, obj_function, improvement)
+        return h_current, h_prime
+
     if minimization:
         improvement = lambda x: x <= 0
     else:
@@ -48,9 +55,9 @@ def simulated_annealing(h, obj_function, T_initial=80, T_final=1e-100, ctr_max=1
         if verbose and np.random.random() < 0.01:
             sys.stdout.write("Temperature: {}\n".format(T))
         for ctr in range(1, ctr_max):
-            h_prime = neighbour(h_current, k, E)
+            # Do a single iteration
+            h_current, h_prime = iter(h_current, k, E, T, obj_function, improvement)
             cache.append(h_prime)
-            h_current = evaluate_move(h_current, h_prime, T, obj_function, improvement)
         T = cooling(T, alpha)
     return h_current, cache
 

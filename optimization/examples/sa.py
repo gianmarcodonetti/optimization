@@ -16,12 +16,12 @@ def basic():
     plt.title("Objective Function")
     plt.show()
 
-    h = np.random.randint(-1000, 1000)
+    h = np.random.randint(10 ** 4, 10 ** 7)
     obj_func = lambda x: - utils.sin_amplitude_basic(x)
     minimization = True
 
     h_final, cache = simulatedannealing.simulated_annealing(
-        h, obj_func, T_initial=80, T_final=1e-100, ctr_max=100, alpha=0.98, k=10, E=10, minimization=minimization,
+        h, obj_func, T_initial=80, T_final=1e-100, ctr_max=150, alpha=0.98, k=20, E=20, minimization=minimization,
         verbose=True
     )
     print("Final solution:")
@@ -29,7 +29,7 @@ def basic():
     print("Len cache:", len(cache))
 
     _ = plt.figure(figsize=(14, 10))
-    plt.plot([utils.sin_amplitude_basic(c) for c in cache[:30000:1]])
+    plt.plot([utils.sin_amplitude_basic(c) for c in cache[::20]])
     plt.xlabel('iteration')
     plt.ylabel('value of objective function')
     plt.title("Simulated Annealing searching the optimum")
@@ -59,12 +59,12 @@ def advance():
     plt.title("Objective Function")
     plt.show()
 
-    h = np.random.randint(-1000, 1000)
+    h = np.random.randint(10 ** 4, 10 ** 7)
     obj_func = lambda x: - utils.sin_amplitude(x)
     minimization = True
 
     h_final, cache = simulatedannealing.simulated_annealing(
-        h, obj_func, T_initial=80, T_final=1e-100, ctr_max=100, alpha=0.98, k=10, E=10, minimization=minimization,
+        h, obj_func, T_initial=80, T_final=1e-100, ctr_max=150, alpha=0.98, k=20, E=20, minimization=minimization,
         verbose=True
     )
     print("Final solution:")
@@ -72,7 +72,7 @@ def advance():
     print("Len cache:", len(cache))
 
     _ = plt.figure(figsize=(14, 10))
-    plt.plot([utils.sin_amplitude(c) for c in cache[:30000:1]])
+    plt.plot([utils.sin_amplitude(c) for c in cache[::20]])
     plt.xlabel('iteration')
     plt.ylabel('value of objective function')
     plt.title("Simulated Annealing searching the optimum")
@@ -92,7 +92,7 @@ def advance():
 
 
 if __name__ == '__main__':
-    input("Please, press Enter to start...")
+    print("Starting the Simulated Annealing examples...")
     basic()
     advance()
     input("Please, press Enter to end...")
