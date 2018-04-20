@@ -15,3 +15,7 @@ def sin_amplitude(x, gain=5):
 
 def sin_amplitude_basic(x, gain=5):
     return gain - np.abs(x / 2) + sen(x)
+
+
+def pipe_functions(functions, zero_value):
+    return reduce(lambda res, f: f(res), functions, zero_value)
