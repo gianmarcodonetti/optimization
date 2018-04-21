@@ -2,8 +2,7 @@ from functools import partial
 from itertools import chain
 from copy import deepcopy
 
-from optimization.speculative.utils import split_flatmapper, neighbour_mapper, evaluate_mapper
-from optimization.utils import pipe_functions
+from optimization.speculative.utils import split_flatmapper, neighbour_mapper, evaluate_mapper, pipe_functions
 
 
 def map_iterable(it, func):
@@ -18,8 +17,11 @@ def flatmap_iterable(it, func):
     return flatten(map_iterable(it, func))
 
 
-def create_tree_iterable(initial_list, tree_depth=10):
-    functions = [partial(flatmap_iterable, func=split_flatmapper), partial(map_iterable, func=neighbour_mapper)]
+def create_tree_iterable(initial_list, neighbour_function, tree_depth=10):
+    functions = [
+        partial(flatmap_iterable, func=split_flatmapper),
+        partial(map_iterable, func=partial(neighbour_mapper, neighbour_function=neighbour_function))
+    ]
     tree = pipe_functions(functions * (tree_depth), map_iterable(initial_list, neighbour_mapper))
     return map(evaluate_mapper, filter(lambda x: x['to_evaluate'], tree))
 
