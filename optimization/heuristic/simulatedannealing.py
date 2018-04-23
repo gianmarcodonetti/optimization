@@ -13,7 +13,7 @@ def simulated_annealing(h, obj_function, neighbour_function, t_initial=80, t_fin
     Args:
         h (float): initial solution
         obj_function (callable): objective function, to minimize or maximize
-        neighbour_function (callable):
+        neighbour_function (callable): function able to retrieve a neighbour solution, from a given one
         t_initial (float): initial temperature
         t_final (float): final temperature
         ctr_max (int): number of iterations per cooling process
@@ -39,6 +39,7 @@ def simulated_annealing(h, obj_function, neighbour_function, t_initial=80, t_fin
         improvement = lambda x: x <= 0
     else:
         improvement = lambda x: x >= 0
+
     h_current = h
     t = t_initial
     cache = [h]
@@ -52,19 +53,35 @@ def simulated_annealing(h, obj_function, neighbour_function, t_initial=80, t_fin
         t = cooling(t, alpha)
     return h_current, cache
 
-
+    
 def probability(delta, t):
     return np.e ** (-delta / t)
 
 
 def evaluate_move(h, h_prime, t, obj_function, improvement):
+    if hasattr(h, "persist"):
+        print("Input 1 is cached? {}".format(h.is_cached))
+        print("Input 2 is cached? {}".format(h_prime.is_cached))
+        rdd = True
+        h_prime.persist()
+        h.persist()
+    else:
+        print("NO RDDs")
+        rdd = False
+
     delta = obj_function(h_prime) - obj_function(h)
     if improvement(delta):
         h_new = h_prime
+        if rdd:
+            h.unpersist()
     else:
         prob = probability(delta, t)
         if np.random.random() <= prob:
             h_new = h_prime
+            if rdd:
+                h.unpersist()
         else:
             h_new = h
+            if rdd:
+                h_prime.unpersist()
     return h_new
