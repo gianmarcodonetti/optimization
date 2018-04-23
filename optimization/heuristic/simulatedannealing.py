@@ -53,7 +53,7 @@ def simulated_annealing(h, obj_function, neighbour_function, t_initial=80, t_fin
         t = cooling(t, alpha)
     return h_current, cache
 
-    
+
 def probability(delta, t):
     return np.e ** (-delta / t)
 
@@ -66,7 +66,6 @@ def evaluate_move(h, h_prime, t, obj_function, improvement):
         h_prime.persist()
         h.persist()
     else:
-        print("NO RDDs")
         rdd = False
 
     delta = obj_function(h_prime) - obj_function(h)
