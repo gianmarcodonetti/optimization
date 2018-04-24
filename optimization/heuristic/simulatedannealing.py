@@ -13,7 +13,7 @@ def simulated_annealing(h, obj_function, neighbour_function, t_initial=80, t_fin
     Args:
         h (float): initial solution
         obj_function (callable): objective function, to minimize or maximize
-        neighbour_function (callable): function able to retrieve a neighbour solution, from a given one
+        neighbour_function (callable): function able to retrieve a neighbour_sin_amplitude solution, from a given one
         t_initial (float): initial temperature
         t_final (float): final temperature
         ctr_max (int): number of iterations per cooling process
