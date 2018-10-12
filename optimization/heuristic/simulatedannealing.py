@@ -7,7 +7,7 @@ def cooling(t, alpha=0.99):
 
 
 def simulated_annealing(h, obj_function, neighbour_function, t_initial=80, t_final=1e-100, ctr_max=100, alpha=0.99,
-                        minimization=True, verbose=False):
+                        minimization=True, verbose=False, caching=True):
     """
 
     Args:
@@ -20,6 +20,7 @@ def simulated_annealing(h, obj_function, neighbour_function, t_initial=80, t_fin
         alpha (float): temperature decay, should be between 0 and 1
         minimization (bool): whether to minimize or maximize the objective function
         verbose (bool): whether to be verbose or not
+        caching (bool): whether to store the evaluted solution
 
     Returns:
         float, list:
@@ -29,7 +30,7 @@ def simulated_annealing(h, obj_function, neighbour_function, t_initial=80, t_fin
     assert 0 < t_final < t_initial, "Input params of temperature should respect:  0 < t_final < t_initial"
 
     def iteration(_h_current, _neighbour_function, _t, _obj_function, _improvement):
-        # 1. generating new solution
+        # 1. Generating new solution
         _h_prime = _neighbour_function(_h_current)
         # 2. Making decision
         _h_current = evaluate_move(_h_current, _h_prime, _t, _obj_function, _improvement)
@@ -49,7 +50,8 @@ def simulated_annealing(h, obj_function, neighbour_function, t_initial=80, t_fin
         for ctr in range(1, ctr_max):
             # Do a single iteration
             h_current, h_prime = iteration(h_current, neighbour_function, t, obj_function, improvement)
-            cache.append(h_prime)
+            if caching:
+                cache.append(h_prime)
         t = cooling(t, alpha)
     return h_current, cache
 
@@ -84,3 +86,5 @@ def evaluate_move(h, h_prime, t, obj_function, improvement):
             if rdd:
                 h_prime.unpersist()
     return h_new
+
+
