@@ -1,3 +1,6 @@
+from __future__ import print_function
+from __future__ import division
+
 import numpy as np
 import sys
 
@@ -8,22 +11,27 @@ def cooling(t, alpha=0.99):
 
 def simulated_annealing(h, obj_function, neighbour_function, t_initial=80, t_final=1e-100, ctr_max=100, alpha=0.99,
                         minimization=True, verbose=False, caching=True):
-    """
+    """Simulated Annealing.
+    Simulated annealing (SA) is a probabilistic technique for approximating the global optimum of a given function.
+    Specifically, it is a metaheuristic to approximate global optimization in a large search space for an optimization
+    problem.
+    The name and inspiration come from annealing in metallurgy, a technique involving heating and controlled cooling
+    of a material to increase the size of its crystals and reduce their defects.
 
     Args:
         h (float): initial solution
-        obj_function (callable): objective function, to minimize or maximize
-        neighbour_function (callable): function able to retrieve a neighbour_sin_amplitude solution, from a given one
+        obj_function (callable): objective (energy) function, to minimize or maximize
+        neighbour_function (callable): function able to retrieve a new candidate solution, from a given one
         t_initial (float): initial temperature
         t_final (float): final temperature
         ctr_max (int): number of iterations per cooling process
         alpha (float): temperature decay, should be between 0 and 1
         minimization (bool): whether to minimize or maximize the objective function
-        verbose (bool): whether to be verbose or not
-        caching (bool): whether to store the evaluted solution
+        verbose (bool): whether to print details of the iteration process
+        caching (bool): whether to store the evaluated solutions
 
     Returns:
-        float, list:
+        float, list: the optimal solution together with the cache list
     """
 
     assert 0 < alpha < 1, "Input param 'alpha' should be in (0, 1), {} is not ok".format(alpha)
@@ -86,5 +94,3 @@ def evaluate_move(h, h_prime, t, obj_function, improvement):
             if rdd:
                 h_prime.unpersist()
     return h_new
-
-

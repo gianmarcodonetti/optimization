@@ -1,3 +1,6 @@
+from __future__ import print_function
+from __future__ import division
+
 import numpy as np
 import torch
 import cProfile
@@ -8,24 +11,25 @@ from optimization.heuristic.simulatedannealing import simulated_annealing
 
 
 def main():
-    Q = np.loadtxt('QMtx.dat')
-    N = Q.shape[0]
-
-    clipper = lambda t: 0 if t < 0.5 else 1
-    vfunc = np.vectorize(clipper)
+    # Load data
+    qubo_matrix = np.loadtxt('qubo_matrix.dat')
+    N = qubo_matrix.shape[0]
 
     def generate_initial_solution(size):
+        clipper = lambda t: 0 if t < 0.5 else 1
+        vfunc = np.vectorize(clipper)
         x_raw = np.random.random(size=size)
         x = vfunc(x_raw)
         return x
 
     torch.cuda.empty_cache()
 
+    # Generate first Pyorch objects
     x_torch = torch.cuda.FloatTensor(generate_initial_solution(N))
-    Q_torch = torch.cuda.FloatTensor(Q).share_memory_()
+    qubo_torch = torch.cuda.FloatTensor(qubo_matrix).share_memory_()
 
-    def qubo_obj_function_torch_2(x_torch, Q_torch):
-        return torch.matmul(torch.matmul(x_torch, Q_torch), x_torch)
+    def qubo_obj_function_torch(_x_torch, _qubo_torch):
+        return torch.matmul(torch.matmul(_x_torch, _qubo_torch), _x_torch)
 
     def neigh_torch(v_torch, v_size, n_bit_to_mutate=2):
         v_copy = v_torch.clone()
@@ -34,9 +38,10 @@ def main():
             v_copy[bit] = 1 - v_copy[bit]
         return v_copy
 
+    # Prepare all the inputs to the Simulated Annealing process
     h = x_torch
 
-    obj_func_torch = partial(qubo_obj_function_torch_2, Q_torch=Q_torch)
+    obj_func_torch = partial(qubo_obj_function_torch, Q_torch=qubo_torch)
     nb_func_torch = partial(neigh_torch, v_size=N, n_bit_to_mutate=1)
 
     minimization = True

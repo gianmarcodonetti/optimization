@@ -2,7 +2,7 @@ from functools import partial
 from itertools import chain
 from copy import deepcopy
 
-from optimization.speculative.utils import split_flatmapper, neighbour_mapper, evaluate_mapper, pipe_functions
+from optimization.heuristic.speculative.utils import split_flatmapper, neighbour_mapper, evaluate_mapper, pipe_functions
 
 
 def map_iterable(it, func):

@@ -1,6 +1,6 @@
 from functools import partial
 
-from optimization.speculative.utils import split_flatmapper, neighbour_mapper, evaluate_mapper, pipe_functions
+from optimization.heuristic.speculative.utils import split_flatmapper, neighbour_mapper, evaluate_mapper, pipe_functions
 
 
 def map_rdd(rdd, func):
