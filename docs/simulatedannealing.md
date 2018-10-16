@@ -45,9 +45,11 @@ N = qubo_matrix.shape[0]
 
 We can now start the annealing process.
 
-## Numpy
+## NumPy
 
-First, let's pick a random initial solution and define all the required function for the simulation to start:
+The first framework we work with is **NumPy**.
+
+As initial step, let's pick a random initial solution and define all the required function for the simulation to start:
 
 ```python
 def generate_initial_solution(size):
@@ -107,15 +109,15 @@ del cache
 ```
 
 
-## Pytorch
+## PyTorch
 
 The ***simulated_annealing*** function I have developed is so generic
-that we can also run on GPUs, exploiting, for example,
-the **Pytorch** framework.
+that we can also run it on **GPU**s, exploiting, for example,
+the **PyTorch** framework.
 Indeed, we can define our solutions and the QUBO matrix in
 torch Tensors, together with adequate objective and neighbour functions.
 
-Let's recreate the flow we have developed for numpy framework.
+Let's recreate the flow we have developed for the numpy framework.
 
 Creating the initial solution and the QUBO matrix as torch tensors:
 ```python
@@ -163,12 +165,12 @@ We should now inspect the final solution and the explorated solution space:
 
 ```python
 print("Final solution:")
-print("f(x) = {}".format(obj_func(h_final)))
+print("f(x) = {}".format(obj_func_torch(h_final)))
 print("Len cache:", len(cache))
 print("Explored space: {} %".format(len(cache) / 2**len(h_final) * 100))
 
 _ = plt.figure(figsize=(12, 8))
-plt.plot([qubo_obj_function_numpy(c, Q) for c in cache[::100]])
+plt.plot([obj_func_torch(c) for c in cache[::100]])
 plt.xlabel('iteration')
 plt.ylabel('value of objective function')
 plt.show()
