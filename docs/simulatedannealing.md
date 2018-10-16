@@ -98,7 +98,7 @@ print("Len cache:", len(cache))
 print("Explored space: {} %".format(len(cache) / 2**len(h_final) * 100))
 
 _ = plt.figure(figsize=(12, 8))
-plt.plot([qubo_obj_function_numpy(c, Q) for c in cache[::100]])
+plt.plot([qubo_obj_function_numpy(c, qubo_matrix) for c in cache[::100]])
 plt.xlabel('iteration')
 plt.ylabel('value of objective function')
 plt.show()
