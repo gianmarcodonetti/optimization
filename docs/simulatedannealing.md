@@ -67,8 +67,8 @@ def neigh_numpy(v, n_bit_to_mutate=2):
         v_copy[bit] = 1 - v_copy[bit]
     return v_copy
 
-obj_func = partial(qubo_obj_function_numpy, Q=Q)
-nb_func = partial(neigh_numpy_2, n_bit_to_mutate=2)
+obj_func = partial(qubo_obj_function_numpy, Q=qubo_matrix)
+nb_func = partial(neigh_numpy, n_bit_to_mutate=2)
 
 h = generate_initial_solution(N)
 ```
@@ -122,7 +122,7 @@ Creating the initial solution and the QUBO matrix as torch tensors:
 torch.cuda.empty_cache()
 
 h_torch = torch.cuda.FloatTensor(generate_initial_solution(N))
-Q_torch = torch.cuda.FloatTensor(Q).share_memory_()
+Q_torch = torch.cuda.FloatTensor(qubo_matrix).share_memory_()
 ```
 
 Now we can define all the required function for the simulation to start with a *torchy slang*:
@@ -138,8 +138,8 @@ def neigh_torch(v_torch, v_size, n_bit_to_mutate=2):
         v_copy[bit] = 1 - v_copy[bit]
     return v_copy
 
-obj_func_torch = partial(qubo_obj_function_torch, Q_torch=qubo_torch)
-nb_func_torch = partial(neigh_torch, v_size=N, n_bit_to_mutat
+obj_func_torch = partial(qubo_obj_function_torch, Q_torch=Q_torch)
+nb_func_torch = partial(neigh_torch, v_size=N, n_bit_to_mutate=1)
 ```
 
 
@@ -147,7 +147,7 @@ We can exploit the same APIs as before:
 
 ```python
 prof = cProfile.Profile()
-args = [h, obj_func_torch, nb_func_torch]
+args = [h_torch, obj_func_torch, nb_func_torch]
 kwargs = {
     't_initial': t_initial, 't_final': t_final,
     'ctr_max': ctr_max, 'alpha': alpha,
