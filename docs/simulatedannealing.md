@@ -1,6 +1,6 @@
 # Simulated Annealing
 
-Let me introduce the Simulated Annealing service.
+Let me introduce the [Simulated Annealing](https://github.com/gianmarcodonetti/optimization/blob/master/optimization/heuristic/simulatedannealing.py) service.
 
 ## Setup
 
@@ -36,10 +36,7 @@ We are trying to solve a QUBO problem. We have already built our matrix of coeff
 
 ```python
 qubo_matrix = np.loadtxt('qubo_matrix.dat')
-print("Q shape:", qubo_matrix.shape)
-
 assert qubo_matrix.shape[0] == qubo_matrix.shape[1]
-
 N = qubo_matrix.shape[0]
 ```
 
@@ -91,6 +88,28 @@ h_final, cache = prof.runcall(simulated_annealing, *args, **kwargs)
 prof.print_stats()
 ```
 
+Output:
+```
+         377090 function calls in 42.397 seconds
+
+   Ordered by: standard name
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+    54054    0.155    0.000   41.344    0.001 <ipython-input-18-4e4dd4d5ca13>:1(qubo_obj_function_numpy)
+    27027    0.216    0.000    0.514    0.000 <ipython-input-18-4e4dd4d5ca13>:4(neigh_numpy_2)
+        1    0.045    0.045   42.397   42.397 <ipython-input-7-3d9c884bd6c9>:1(simulated_annealing)
+    27027    0.048    0.000    0.048    0.000 <ipython-input-7-3d9c884bd6c9>:14(<lambda>)
+    27027    0.295    0.000   41.743    0.002 <ipython-input-7-3d9c884bd6c9>:33(evaluate_move)
+    27027    0.087    0.000   42.344    0.002 <ipython-input-7-3d9c884bd6c9>:6(iteration)
+    27027    0.008    0.000    0.008    0.000 {method 'append' of 'list' objects}
+    27027    0.061    0.000    0.061    0.000 {method 'copy' of 'numpy.ndarray' objects}
+        1    0.000    0.000    0.000    0.000 {method 'disable' of '_lsprof.Profiler' objects}
+   108108   41.189    0.000   41.189    0.000 {method 'dot' of 'numpy.ndarray' objects}
+    27027    0.237    0.000    0.237    0.000 {method 'randint' of 'mtrand.RandomState' objects}
+    25737    0.057    0.000    0.057    0.000 {method 'random_sample' of 'mtrand.RandomState' objects}
+```
+
+
 We should now inspect the final solution and the explorated solution space:
 
 ```python
@@ -107,6 +126,16 @@ plt.show()
 
 del cache
 ```
+
+Output:
+```
+Final solution:
+f(x) = -1440.6
+Len cache: 27028
+Explored space: 0.0 %
+```
+
+![Simulated Annealing towards the optimum, NumPy](./../output/images/big_numpy.png)
 
 
 ## PyTorch
@@ -161,6 +190,32 @@ h_final, cache = prof.runcall(simulated_annealing, *args, **kwargs)
 prof.print_stats()
 ```
 
+Output:
+```
+         809576 function calls in 17.470 seconds
+
+   Ordered by: standard name
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+    54054    0.279    0.000   12.291    0.000 <ipython-input-27-e3aa1d3caa20>:1(qubo_obj_function_torch_2)
+    27027    3.570    0.000    4.736    0.000 <ipython-input-28-748db8d01090>:1(neigh_torch)
+        1    0.037    0.037   17.470   17.470 <ipython-input-7-3d9c884bd6c9>:1(simulated_annealing)
+    27027    0.016    0.000    0.016    0.000 <ipython-input-7-3d9c884bd6c9>:14(<lambda>)
+    27027    0.199    0.000   12.564    0.000 <ipython-input-7-3d9c884bd6c9>:33(evaluate_move)
+    27027    0.128    0.000   17.428    0.001 <ipython-input-7-3d9c884bd6c9>:6(iteration)
+   108108    0.332    0.000   12.011    0.000 functional.py:124(matmul)
+    54054    8.941    0.000    8.941    0.000 {built-in method torch._C.dot}
+    54054    2.100    0.000    2.100    0.000 {built-in method torch._C.mm}
+    27027    0.006    0.000    0.006    0.000 {method 'append' of 'list' objects}
+    27027    0.889    0.000    0.889    0.000 {method 'clone' of 'torch._C.CudaFloatTensorBase' objects}
+   216216    0.091    0.000    0.091    0.000 {method 'dim' of 'torch._C.CudaFloatTensorBase' objects}
+        1    0.000    0.000    0.000    0.000 {method 'disable' of '_lsprof.Profiler' objects}
+    27027    0.276    0.000    0.276    0.000 {method 'randint' of 'mtrand.RandomState' objects}
+    25791    0.059    0.000    0.059    0.000 {method 'random_sample' of 'mtrand.RandomState' objects}
+    54054    0.254    0.000    0.254    0.000 {method 'squeeze_' of 'torch._C.CudaFloatTensorBase' objects}
+    54054    0.295    0.000    0.295    0.000 {method 'unsqueeze' of 'torch._C.CudaFloatTensorBase' objects}
+```
+
 We should now inspect the final solution and the explorated solution space:
 
 ```python
@@ -177,3 +232,14 @@ plt.show()
 
 del cache
 ```
+
+Output:
+```
+Final solution:
+f(x) = -1470.0
+Len cache: 27028
+Explored space: 0.0 %
+```
+
+![Simulated Annealing towards the optimum, PyTorch](./../output/images/big_pytorch.png)
+
