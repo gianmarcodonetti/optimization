@@ -7,6 +7,12 @@ The developed algorithms are:
 - Simulated Annealing
 - Reinforced Annealing
 
+## Docs
+
+Documentation and example of usage of the main APIs.
+
+1. [Simulated Annealing](https://github.com/gianmarcodonetti/optimization/blob/master/docs/simulatedannealing.md#Simulated%20Annealing)
+
 ## Examples
 
 Containing some examples related to end-to-end usage of the proposed solutions, with different scopes, function to optimize and also framework of reference.
