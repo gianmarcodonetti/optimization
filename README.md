@@ -1,11 +1,13 @@
 # Optimization
 
-Python optimization library.
+Mathematical Optimization library.
 
 The developed algorithms are:
 
-- Simulated Annealing
-- Reinforced Annealing
+- Simulated Annealing in python
+- Reinforced Annealing in python
+
+They have been developed with the goal to support different frameworks of data representation.
 
 ## Docs
 
